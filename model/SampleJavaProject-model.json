@@ -1,0 +1,80 @@
+{
+  "info1": "======================================================================================================",
+  "info2": "= This Project was generated with generjee. http://generjee.com                                      =",
+  "info3": "= You can import this file into the generjee tool, then change the project model and generate again. =",
+  "info4": "======================================================================================================",
+  "entities": [
+    {
+      "name": "Product Example",
+      "id": 1000,
+      "lookupField": "productname",
+      "fields": [
+        {
+          "id": 0,
+          "name": "id",
+          "type": "Autoincremented ID",
+          "editable": false,
+          "showInTable": false,
+          "required": true
+        },
+        {
+          "id": "productname",
+          "name": "Name",
+          "type": "String",
+          "editable": true,
+          "showInTable": true,
+          "stringLength": 50,
+          "required": true
+        },
+        {
+          "id": "price",
+          "name": "Price",
+          "type": "Decimal",
+          "editable": true,
+          "showInTable": true,
+          "integerLength": 5,
+          "fractionLength": 2,
+          "required": false
+        },
+        {
+          "id": "stock",
+          "name": "Stock",
+          "type": "Number",
+          "editable": true,
+          "showInTable": true,
+          "integerLength": 4,
+          "required": false
+        },
+        {
+          "id": "launch",
+          "name": "Launch Date",
+          "type": "Date",
+          "editable": true,
+          "showInTable": true,
+          "required": false
+        },
+        {
+          "id": "discontinued",
+          "name": "Discontinued",
+          "type": "Boolean",
+          "editable": true,
+          "showInTable": true,
+          "required": false
+        }
+      ]
+    }
+  ],
+  "appSettings": {
+    "generjeeversion": "1.0",
+    "appName": "Sample Java Project",
+    "package": "info.maalvarez",
+    "masterDetailsStyle": "1",
+    "dataListStyle": "1",
+    "pfTheme": "omega",
+    "runtarget": "as",
+    "layer": {
+      "rest": false
+    }
+  },
+  "guid": "4da49f07-ba12-46c0-e5ae-364c5ae35fd1"
+}

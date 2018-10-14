@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui">
+<ui:composition template="/templates/layout.xhtml">
+  <ui:define name="content">
+
+    <h:form prependId="false" id="productExampleDataForm" onkeypress="if (event.keyCode == 13) {return false; }">
+
+        <p:dataTable id="productExampleTable" value="#{productExampleBean.productExampleList}" var="productExample" resizableColumns="true" paginator="true"
+                paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="5,10,25,50" rows="10" draggableColumns="true"
+                paginatorPosition="bottom" widgetVar="productExampleTable" emptyMessage="#{messages.label_no_records_found}"
+                reflow="true">
+        
+          <f:facet name="header" >
+
+              <p:commandButton value="#{messages.create_new_productExample}" icon="ui-icon-plusthick" action="#{productExampleBean.prepareNewProductExample()}"
+                      resetValues="true" update=":editProductExampleDialog" oncomplete="PF('editProductExampleDialogWidget').show()"
+                      style="float:left" />
+              
+              <p:commandButton id="toggler" type="button" value="#{messages.table_select_columns}" icon="ui-icon-calculator" />
+              <p:columnToggler datasource="productExampleTable" trigger="toggler" />
+          </f:facet>
+          
+          <p:column  headerText="#{messages.field_label_productExample_name}" sortBy="#{productExample.name}" filterBy="#{productExample.name}">
+            <f:facet name="filter">
+                <p:inputText id="nameFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('productExampleTable').filter(); updateNameFilter(); return false; }" >
+                    <p:remoteCommand name="updateNameFilter" update="productExampleTable:nameFilter" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{productExample.name}" />
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_productExample_price}" sortBy="#{productExample.price}" filterBy="#{productExample.price}">
+            <f:facet name="filter">
+                <p:inputText id="priceFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('productExampleTable').filter(); updatePriceFilter(); return false; }" >
+                    <f:convertNumber />
+                    <p:remoteCommand name="updatePriceFilter" update="productExampleTable:priceFilter" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{productExample.price}"><f:convertNumber /></h:outputText>
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_productExample_stock}" sortBy="#{productExample.stock}" filterBy="#{productExample.stock}">
+            <f:facet name="filter">
+                <p:inputText id="stockFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('productExampleTable').filter(); updateStockFilter(); return false; }" >
+                    <p:remoteCommand name="updateStockFilter" update="productExampleTable:stockFilter" />
+                    <f:convertNumber integerOnly="true" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{productExample.stock}" ><f:convertNumber /></h:outputText>
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_productExample_launchDate}" sortBy="#{productExample.launchDate}" filterBy="#{productExample.launchDate}">
+            <f:facet name="filter">
+                <p:inputText id="launchDateFilter"
+                        onkeyup="if (event.keyCode == 13) {PF('productExampleTable').filter(); updateLaunchDateFilter(); return false;}" >
+                    <p:remoteCommand name="updateLaunchDateFilter" update="productExampleTable:launchDateFilter" />
+                    <f:convertDateTime />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{productExample.launchDate}"><f:convertDateTime /></h:outputText>
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_productExample_discontinued}" sortBy="#{productExample.discontinued}" filterBy="#{productExample.discontinued}" exportable="false">
+            <f:facet name="filter">
+                 <p:selectOneMenu converter="javax.faces.Boolean"
+                        onchange="PF('productExampleTable').filter(); return false;" style="width:50%">
+                        <f:selectItem itemLabel="&nbsp;" itemValue="" />
+                        <f:selectItem itemLabel="#{messages.field_label_productExample_discontinued_true}" itemValue="true" />
+                        <f:selectItem itemLabel="#{messages.field_label_productExample_discontinued_false}" itemValue="false" />
+                </p:selectOneMenu>
+            </f:facet>
+            <h:panelGroup styleClass="ui-icon ui-icon-check" rendered="#{productExample.discontinued}"/>
+          </p:column>
+
+          <p:column styleClass="action-column" headerText="#{messages.table_actions_column}" width="115" exportable="false">
+            
+            <p:commandButton icon="ui-icon-zoomin" update=":viewProductExampleDialog" oncomplete="PF('viewProductExampleDialogWidget').show()" title="#{messages.label_view}">
+              <f:setPropertyActionListener value="#{productExample}" target="#{productExampleBean.productExample}" />
+            </p:commandButton>
+
+            <p:commandButton icon="ui-icon-pencil" update=":editProductExampleDialog"
+                resetValues="true" 
+                action="#{productExampleBean.onDialogOpen(productExample)}"
+                oncomplete="PF('editProductExampleDialogWidget').show()"
+                title="#{messages.label_edit}" >
+            </p:commandButton>
+
+            <p:commandButton icon="ui-icon-close" 
+                oncomplete="PF('deleteProductExampleDialogWidget').show()"
+                title="#{messages.label_delete}" >
+                <f:setPropertyActionListener value="#{productExample}"
+                    target="#{productExampleBean.productExample}" />
+            </p:commandButton>
+    
+          </p:column>
+          
+        </p:dataTable>
+        
+    </h:form>
+
+    <p:confirmDialog id="deleteProductExampleDialog" widgetVar="deleteProductExampleDialogWidget"
+        header="#{messages.label_confirm_deletion}"
+        severity="alarm">
+        <f:facet name="message"><h:outputText value="#{messages.label_delete_record}" escape="false"/></f:facet>
+        <p:outputPanel>
+          <h:form>
+            <div style="text-align: center; margin:10px">
+              <p:commandButton value="#{messages.label_yes}" action="#{productExampleBean.delete}" update=":productExampleDataForm :growlForm:growl" oncomplete="PF('deleteProductExampleDialogWidget').hide()" />
+              <p:commandButton value="#{messages.label_no}" onclick="PF('deleteProductExampleDialogWidget').hide()" type="button" />
+            </div>
+          </h:form>
+        </p:outputPanel>
+    </p:confirmDialog>
+    
+    <p:dialog dynamic="true" id="editProductExampleDialog" header="#{messages.label_productExample_caption}"
+            modal="true" widgetVar="editProductExampleDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{productExampleBean.reset}"/>
+        <h:form id="editProductExampleForm" >
+            <p:outputPanel id="productExampleEditPanel">
+                <ui:include src="/pages/productExample/productExampleEditInclude.xhtml"/>
+                <div style="text-align: center; margin:10px">
+                    <p:commandButton value="#{messages.label_save}"
+                            icon="ui-icon-disk" action="#{productExampleBean.persist}"
+                            update=":editProductExampleForm:productExampleEditPanel :productExampleDataForm :growlForm:growl"
+                            oncomplete="if(!args.validationFailed) PF('editProductExampleDialogWidget').hide()" />
+                    <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('editProductExampleDialogWidget').hide()" type="button" />
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="viewProductExampleDialog" header="#{messages.label_productExample_caption}" modal="true" widgetVar="viewProductExampleDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{productExampleBean.reset}" />
+        <h:form id="viewProductExampleForm">
+          <ui:include src="/pages/productExample/productExampleViewInclude.xhtml"/>
+          <div style="text-align: center; margin:10px">
+              <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('viewProductExampleDialogWidget').hide()" type="button" />
+          </div>
+        </h:form>
+    </p:dialog>
+    
+  </ui:define>
+</ui:composition>
+</html>
